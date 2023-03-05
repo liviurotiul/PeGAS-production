@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker build -t bacdistest .
+docker build -t pegas .
 
-docker run -u $(id -u) -v $1/data:/app/data -v $1/database:/app/database bacdistest:latest 
+docker run -u $(id -u) -v $(pwd)/data/data:/app/data -v $(pwd)/data/database:/app/database pegas:latest 
