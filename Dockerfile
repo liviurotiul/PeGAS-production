@@ -11,11 +11,15 @@ ENV PYTHONUNBUFFERED=1
 # COPY requirements.txt .
 # RUN python -m pip install -r requirements.txt
 
-RUN apt-get -y update
-RUN apt-get -y install libgsl-dev
-RUN apt-get -y install libopenblas-dev
-RUN apt-get -y install file
-RUN apt-get -y install roary
+# RUN apt-get -y update
+# RUN apt-get -y install libgsl-dev
+# RUN apt-get -y install libopenblas-dev
+# RUN apt-get -y install file
+# RUN apt-get -y install roary
+RUN apt-get update && \
+    apt-get -y install libgsl-dev libopenblas-dev file roary && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create the environment:
 COPY environment.yml .
@@ -27,17 +31,24 @@ RUN echo "conda activate myenv" >> ~/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 
 # Install bioconda programs used
-RUN conda install -c bioconda shovill
-RUN conda install -c bioconda fastqc
-RUN conda install -c bioconda mlst
-RUN conda install -c bioconda abricate
-RUN conda install -c plotly plotly=5.10.0=py_0
-RUN conda install -c conda-forge dash=2.6.2=pyhd8ed1ab_0
-RUN conda install -c anaconda beautifulsoup4=4.11.1=py37h06a4308_0
-RUN conda install pandas=1.3.5=py37h8c16a72_0
-RUN conda install tqdm=4.64.1=py37h06a4308_0
-RUN conda install -c conda-forge pyfiglet
-RUN conda install -c anaconda networkx
+# RUN conda install -c bioconda shovill
+# RUN conda install -c bioconda fastqc
+# RUN conda install -c bioconda mlst
+# RUN conda install -c bioconda abricate
+# RUN conda install -c plotly plotly=5.10.0=py_0
+# RUN conda install -c conda-forge dash=2.6.2=pyhd8ed1ab_0
+# RUN conda install -c anaconda beautifulsoup4=4.11.1=py37h06a4308_0
+# RUN conda install pandas=1.3.5=py37h8c16a72_0
+# RUN conda install tqdm=4.64.1=py37h06a4308_0
+# RUN conda install -c conda-forge pyfiglet
+# RUN conda install -c anaconda networkx
+# RUN conda install -c conda-forge pytest-shutil
+RUN conda install -c bioconda shovill fastqc mlst abricate pandas tqdm networkx \
+    && conda install -c plotly plotly=5.10.0=py_0 \
+    && conda install -c conda-forge dash=2.6.2=pyhd8ed1ab_0 \
+    && conda install -c anaconda beautifulsoup4=4.11.1=py37h06a4308_0 \
+    && conda install -c conda-forge pyfiglet \
+    && conda install -c conda-forge pytest-shutil
 
 ARG INCUBATOR_VER=unknown
 WORKDIR /app
